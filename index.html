@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebula - Señal Entrante</title>
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --bg: #050508;
+            --alert: #ff3366;
+            --dim: rgba(0, 255, 204, 0.3);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--primary);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            padding: 2rem;
+            border: 1px solid var(--dim);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.1) inset;
+            position: relative;
+        }
+
+        /* Esfera y Anillos */
+        .system {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 3rem auto;
+            transform-style: preserve-3d;
+            transform: rotateX(60deg) rotateY(15deg);
+        }
+
+        .sphere {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotateX(-60deg) rotateY(-15deg);
+            box-shadow: 0 0 30px var(--primary), 0 0 60px var(--primary);
+        }
+
+        .ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .ring-1 {
+            width: 120px;
+            height: 120px;
+            border: 2px solid var(--primary);
+            border-top: 2px solid transparent;
+            animation: spin 3s linear infinite;
+        }
+
+        .ring-2 {
+            width: 170px;
+            height: 170px;
+            border: 1px dashed var(--primary);
+            animation: spin-reverse 8s linear infinite;
+        }
+
+        .ring-3 {
+            width: 220px;
+            height: 220px;
+            border: 1px solid var(--dim);
+            border-bottom: 2px dotted var(--primary);
+            animation: spin 12s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: translate(-50%, -50%) rotateZ(360deg); } }
+        @keyframes spin-reverse { 100% { transform: translate(-50%, -50%) rotateZ(-360deg); } }
+
+        /* Tipografía y Elementos */
+        h1 {
+            text-align: center;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .fragment-box {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(0, 255, 204, 0.05);
+            border-left: 3px solid var(--primary);
+        }
+
+        .fragment {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .received, .anomaly {
+            margin: 1.5rem 0;
+            line-height: 1.5;
+        }
+
+        .anomaly {
+            color: var(--alert);
+            border: 1px solid var(--alert);
+            padding: 1rem;
+            position: relative;
+        }
+
+        .anomaly::before {
+            content: "ADVERTENCIA: ";
+            font-weight: bold;
+        }
+
+        /* Controles Binarios */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .btn {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.8rem 3rem;
+            font-family: inherit;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            color: var(--bg);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        /* Scanline Overlay */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    
+    <div class="container">
+        <div class="system">
+            <div class="sphere"></div>
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-3"></div>
+        </div>
+
+        <h1>Se detectó una señal hace 17 horas</h1>
+
+        <div class="fragment-box">
+            <div class="fragment">◈ ⟁ ◈ SECUENCIA_01_ESTABLECIDA</div>
+            <div class="fragment">◈ ⟁ ◈ SECUENCIA_02_EN_ESPERA</div>
+            <div class="fragment">◈ ⟁ ◈ SECUENCIA_03_SINCRONIZADA</div>
+        </div>
+
+        <div class="received">
+            <strong>FRAGMENTO RECIBIDO:</strong><br>
+            [01001110 01000101 01000010 01010101 01001100 01000001]<br>
+            Origen desconocido. Integridad estructural al 84%. Decodificando matriz de transmisión...
+        </div>
+
+        <div class="anomaly">
+            <strong>ANOMALÍA DEL DÍA 2</strong><br>
+            El pulso electromagnético registrado en el sector 4 ha mutado. La lectura de radiación de fondo ya no coincide con los parámetros euclidianos. El protocolo de aislamiento temporal falló a las 04:00 horas.
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <p>¿PROCEDER CON LA DESENCRIPTACIÓN PROFUNDA?</p>
+            <div class="controls">
+                <button class="btn" onclick="handleResponse('SÍ')">SÍ</button>
+                <button class="btn" onclick="handleResponse('NO')">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleResponse(answer) {
+            const container = document.querySelector('.container');
+            if(answer === 'SÍ') {
+                container.innerHTML = '<h1 style="color: #00ffcc; text-align:center; margin-top:20vh;">INICIANDO PROTOCOLO...<br>SISTEMA COMPROMETIDO.</h1>';
+            } else {
+                container.innerHTML = '<h1 style="color: #ff3366; text-align:center; margin-top:20vh;">CONEXIÓN RECHAZADA.<br>LA SEÑAL SIGUE ESPERANDO.</h1>';
+            }
+        }
+    </script>
+</body>
+</html>
+
